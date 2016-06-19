@@ -3,14 +3,14 @@ from ghost_funcs import determ_subproc, pre_condition, sample_space
 import random, sympy
 
 @sample_space('PRIME, NOTPRIME')
-@pre_condition(lambda n,k: n >= 5 and k > 0)
-#@postcondition: if return = True: assert P[NOTPRIME] <= (0.25)^k, if return = False: assert P[NOTPRIME] = 1)
+@pre_condition(lambda n, k: n >= 5 and k > 0)
+@post_condition(lambda ret: P[NOTPRIME] <= (0.25)^k if ret is True else NOTPRIME)
 def rmprimality(n, k):
     i = 0
     w = Randomized()
     
+    invarient(lambda w: P[PRIME] <= (0.25)^i and w.status is 0);
     for i in range(k):
-        #@invarient(P[PRIME] <= (0.25)^i, w.status = 0)
         w = Randomized(range(2, n-1))
         
         x = isWitness(p=n, rvar=w)
@@ -19,13 +19,15 @@ def rmprimality(n, k):
             return False
     return True
 
+@verified()
 @sample_space('WITNESS, NOTWITNESS')
 @determ_subproc()
 @pre_condition(lambda p,rvar: p >= 5 and rvar.status is 1 and rvar.univ == range(2, n-1))
-#@postcondition(if return = True: WITNESS, if return = False: NOTWITNESS)
+@post_condition(lambda ret: WITNESS if ret is True else NOTWITNESS)
 def isWitness(p, rvar):
     possibleWitness = rvar.value
-
+    
+    @verified()
     def decompose(n):
        exponentOfTwo = 0
      
