@@ -88,7 +88,7 @@ class Paths(ast.NodeVisitor):
         ast.dump(node)
         a = HoareStmt("RETURN",['ret' + self.function_name, node.value.id])# [node.targets[0].id, codegen.to_source(node.value)])
         self.paths[-1].append(a)
-        self.paths.append(self.postcondition)
+        self.paths[-1].append(self.postcondition)
     
     def visit_Call(self, node):
         a = [f for f in  self.toverify if node.func.id == f.name]
