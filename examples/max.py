@@ -1,5 +1,5 @@
 @precondition(True)
-@postcondition(ret >= a and ret >= b and (ret == a or ret == b))
+@postcondition(And(And(ret >= x, ret >= y), (Or(ret == x,ret == y))))
 def max(x, y):
     m = x + y;
     m = m - x;
